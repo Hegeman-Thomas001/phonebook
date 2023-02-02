@@ -1,0 +1,7 @@
+{
+  "persons": [
+    { "name": "Arto Hellas", "number": "040-1234567" },
+    { "name": "Arlo", "number": "040-111" },
+    { "name": "Artoh", "number": "040-1111" }
+  ]
+}
