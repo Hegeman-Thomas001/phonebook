@@ -13,6 +13,10 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
 
+  const filteredPersons = persons.filter((person) =>
+    person.name.toLowerCase().includes(searchName.toLowerCase())
+  );
+
   useEffect(() => {
     axios
       .get("http://localhost:3001/persons")
@@ -33,7 +37,17 @@ const App = () => {
     if (filteredPersons.length) {
       setPersonExists(true);
     } else {
-      setPersons([...persons, { name: newName, number: newNumber }]);
+      const person = {
+        name: newName,
+        number: newNumber,
+      };
+
+      axios
+        .post("http://localhost:3001/persons", person)
+        .then((response) =>
+          setPersons([...persons, { ...person, id: response.data.id }])
+        )
+        .catch((err) => console.log("error", err));
       setNewName("");
       setNewNumber("");
     }
@@ -53,10 +67,6 @@ const App = () => {
   const onNumberChange = (evt) => {
     setNewNumber(evt.target.value);
   };
-
-  const filteredPersons = persons.filter((person) =>
-    person.name.toLowerCase().includes(searchName.toLowerCase())
-  );
 
   console.log(persons);
 
