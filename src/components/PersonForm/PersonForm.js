@@ -9,10 +9,10 @@ const PersonForm = ({
   return (
     <form onSubmit={userSubmit}>
       <section>
-        name: <input onChange={onNameChange} value={newName} />
+        name: <input onChange={onNameChange} value={newName} required />
       </section>
       <section>
-        number: <input onChange={onNumberChange} value={newNumber} />
+        number: <input onChange={onNumberChange} value={newNumber} required />
       </section>
       <section>
         <button type="submit">add</button>

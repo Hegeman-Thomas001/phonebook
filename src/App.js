@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-
+//
+import { getAll, create, update } from "./services/helpers";
 //
 import Filter from "./components/Filter/Filter";
 import Persons from "./components/Persons/Persons";
@@ -18,11 +18,8 @@ const App = () => {
   );
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => {
-        setPersons(response.data);
-      })
+    getAll()
+      .then((data) => setPersons(data))
       .catch((err) => console.log(err, "error"));
   }, []);
 
@@ -42,14 +39,13 @@ const App = () => {
         number: newNumber,
       };
 
-      axios
-        .post("http://localhost:3001/persons", person)
-        .then((response) =>
-          setPersons([...persons, { ...person, id: response.data.id }])
-        )
+      create(person)
+        .then((data) => {
+          setPersons([...persons, { ...person, id: data.id }]);
+          setNewName("");
+          setNewNumber("");
+        })
         .catch((err) => console.log("error", err));
-      setNewName("");
-      setNewNumber("");
     }
   };
 
