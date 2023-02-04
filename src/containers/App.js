@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 //
-import { getAll, create, update, remove } from "./services/helpers";
+import { getAll, create, update, remove } from "../services/helpers";
 //
-import Filter from "./components/Filter/Filter";
-import Persons from "./components/Persons/Persons";
-import PersonForm from "./components/PersonForm/PersonForm";
+import Filter from "../components/Filter/Filter";
+import Persons from "../components/Persons/Persons";
+import PersonForm from "../components/PersonForm/PersonForm";
+//
+// import "./App.css";
 //
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -89,24 +91,26 @@ const App = () => {
   };
 
   return (
-    <section>
+    <section className="flex flex-col items-center justify-center">
       <section>
         <h2>Phonebook</h2>
         <Filter onSearchChange={onSearchChange} value={searchName} />
       </section>
-      <h2>Add a name and number</h2>
-      <PersonForm
-        userSubmit={userSubmit}
-        onNameChange={onNameChange}
-        onNumberChange={onNumberChange}
-        newName={newName}
-        newNumber={newNumber}
-      />
-      {/* {personExists && (
+      <section>
+        <h2>Add a name and number</h2>
+        <PersonForm
+          userSubmit={userSubmit}
+          onNameChange={onNameChange}
+          onNumberChange={onNumberChange}
+          newName={newName}
+          newNumber={newNumber}
+        />
+        {/* {personExists && (
         <p
           style={{ color: "red", fontSize: "2rem" }}
         >{`${newName} already exists.`}</p>
       )} */}
+      </section>
       <section>
         <h2>Numbers</h2>
         <Persons
