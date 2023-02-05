@@ -1,7 +1,7 @@
-.success {
+.error {
   background-color: lightgray;
-  border: 5px solid green;
-  color: green;
+  border: 5px solid red;
+  color: red;
   font-size: 1.5rem;
   position: absolute;
 }

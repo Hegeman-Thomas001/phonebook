@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 //
 import { getAll, create, update, remove } from "../services/helpers";
 //
+import ErrorMessage from "../components/ErrorMessage/ErrorMessage";
 import Filter from "../components/Filter/Filter";
 import Persons from "../components/Persons/Persons";
 import PersonForm from "../components/PersonForm/PersonForm";
@@ -10,12 +11,14 @@ import SuccessMessage from "../components/SuccessMessage/SuccessMessage";
 // import "./App.css";
 //
 const App = () => {
+  const [errorMessage, setErrorMessage] = useState(null);
   const [persons, setPersons] = useState([]);
   const [message, setMessage] = useState(null);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
 
+  console.log(persons);
   const filteredPersons = persons.filter((person) =>
     person.name.toLowerCase().includes(searchName.toLowerCase())
   );
@@ -35,27 +38,44 @@ const App = () => {
   }, []);
 
   const userSubmit = async (evt) => {
+    evt.preventDefault();
     try {
-      evt.preventDefault();
-
       const filteredPersons = persons.filter(
         (person) => person.name.toLowerCase() === newName.toLowerCase()
       );
 
       if (filteredPersons.length) {
         const oldPerson = filteredPersons[0];
-        const data = await update(oldPerson.id, {
-          ...oldPerson,
-          number: newNumber,
-        });
 
-        setPersons(
-          persons.map((person) => (person.id === oldPerson.id ? data : person))
-        );
+        try {
+          const data = await update(oldPerson.id, {
+            ...oldPerson,
+            number: newNumber,
+          });
 
-        setNewName("");
-        setNewNumber("");
-        showMessage(`${oldPerson.name}'s number changed!`);
+          console.log("data from put", data);
+
+          if (!data) {
+            throw Error("error, no data");
+          }
+
+          setPersons(
+            persons.map((person) =>
+              person.id === oldPerson.id ? data : person
+            )
+          );
+          console.log("should not run");
+
+          setNewName("");
+          setNewNumber("");
+          showMessage(`${oldPerson.name}'s number changed!`);
+        } catch (error) {
+          setErrorMessage(`${oldPerson.name} was already deleted`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
+          setPersons(persons.filter((person) => person.id !== oldPerson.id));
+        }
       } else {
         const person = await create({
           name: newName,
@@ -85,8 +105,8 @@ const App = () => {
   };
 
   const handleDelete = async (evt) => {
+    const id = +evt.target.id;
     try {
-      const id = +evt.target.id;
       const status = await remove(id);
 
       if (status === 200) {
@@ -107,6 +127,7 @@ const App = () => {
   return (
     <section className="flex flex-col items-center justify-center">
       <SuccessMessage message={message} />
+      <ErrorMessage message={errorMessage} />
       <section>
         <h2>Phonebook</h2>
         <Filter onSearchChange={onSearchChange} value={searchName} />
