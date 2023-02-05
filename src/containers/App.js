@@ -5,11 +5,13 @@ import { getAll, create, update, remove } from "../services/helpers";
 import Filter from "../components/Filter/Filter";
 import Persons from "../components/Persons/Persons";
 import PersonForm from "../components/PersonForm/PersonForm";
+import SuccessMessage from "../components/SuccessMessage/SuccessMessage";
 //
 // import "./App.css";
 //
 const App = () => {
   const [persons, setPersons] = useState([]);
+  const [message, setMessage] = useState(null);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
@@ -50,6 +52,10 @@ const App = () => {
         setPersons(
           persons.map((person) => (person.id === oldPerson.id ? data : person))
         );
+
+        setNewName("");
+        setNewNumber("");
+        showMessage(`${oldPerson.name}'s number changed!`);
       } else {
         const person = await create({
           name: newName,
@@ -59,6 +65,7 @@ const App = () => {
         setPersons([...persons, { ...person }]);
         setNewName("");
         setNewNumber("");
+        showMessage(`${newName} added to phonebook!`);
       }
     } catch (error) {
       console.log("app submit", error);
@@ -90,8 +97,16 @@ const App = () => {
     }
   };
 
+  const showMessage = (msg) => {
+    setMessage(msg);
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
+
   return (
     <section className="flex flex-col items-center justify-center">
+      <SuccessMessage message={message} />
       <section>
         <h2>Phonebook</h2>
         <Filter onSearchChange={onSearchChange} value={searchName} />
