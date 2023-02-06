@@ -53,8 +53,6 @@ const App = () => {
             number: newNumber,
           });
 
-          console.log("data from put", data);
-
           if (!data) {
             throw Error("error, no data");
           }
@@ -64,13 +62,12 @@ const App = () => {
               person.id === oldPerson.id ? data : person
             )
           );
-          console.log("should not run");
 
           setNewName("");
           setNewNumber("");
-          showMessage(`${oldPerson.name}'s number changed!`);
+          showMessage(`${oldPerson.name}'s number changed.`);
         } catch (error) {
-          setErrorMessage(`${oldPerson.name} was already deleted`);
+          setErrorMessage(`${oldPerson.name} was already deleted.`);
           setTimeout(() => {
             setErrorMessage(null);
           }, 3000);
@@ -106,6 +103,7 @@ const App = () => {
 
   const handleDelete = async (evt) => {
     const id = +evt.target.id;
+
     try {
       const status = await remove(id);
 
@@ -141,11 +139,6 @@ const App = () => {
           newName={newName}
           newNumber={newNumber}
         />
-        {/* {personExists && (
-        <p
-          style={{ color: "red", fontSize: "2rem" }}
-        >{`${newName} already exists.`}</p>
-      )} */}
       </section>
       <section>
         <h2>Numbers</h2>
