@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3001/persons";
+const BASE_URL = "http://localhost:3001/api/persons";
 
 export const getAll = async () => {
   try {
@@ -24,9 +24,12 @@ export const create = async (person) => {
 
 export const update = async (id, person) => {
   try {
-    const { data } = await axios.put(`${BASE_URL}/${id}`, person);
+    // TIL: destructoring multiple levels deep
+    const {
+      config: { data },
+    } = await axios.put(`${BASE_URL}/${id}`, person);
 
-    return data;
+    return JSON.parse(data);
   } catch (error) {
     console.log(error);
   }
